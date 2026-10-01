@@ -1,0 +1,89 @@
+# =====================================================================
+# Creator Video Outlier & Performance Predictor - Training Configuration
+# =====================================================================
+
+project:
+  name: "video-outlier-predictor"
+  version: "0.1.0"
+  seed: 42
+  device: "auto"  # "cuda", "cpu", or "auto"
+
+data:
+  raw_data_path: "data/sample_dataset.json"
+  processed_dir: "data/processed"
+  synthetic_num_samples: 2500
+  num_channels: 80
+  test_size: 0.2
+  val_size: 0.1
+  stratify_by_target: true
+  target_outlier_ratio_threshold: 2.0  # R >= 2.0 considered breakout hit
+
+features:
+  numerical_features:
+    - "duration_seconds"
+    - "tags_count"
+    - "title_char_length"
+    - "title_word_count"
+    - "title_uppercase_ratio"
+    - "published_hour"
+    - "published_day_of_week"
+    - "sin_hour"
+    - "cos_hour"
+    - "sin_day"
+    - "cos_day"
+    - "log_channel_median_views"
+    - "viral_keywords_count"
+  boolean_features:
+    - "has_question_or_exclamation"
+    - "is_weekend"
+    - "is_short"
+  text_embedder:
+    model_name: "sentence-transformers/all-MiniLM-L6-v2"
+    embedding_dim: 384
+    batch_size: 32
+    pca_dim: 32  # Dimensionality reduction for tabular concatenation
+  vision_embedder:
+    model_name: "openai/clip-vit-base-patch32"
+    embedding_dim: 512
+    batch_size: 32
+    pca_dim: 32  # Dimensionality reduction for tabular concatenation
+    image_size: [224, 224]
+
+model_lgbm:
+  objective: "binary"
+  metric: "auc"
+  boosting_type: "gbdt"
+  learning_rate: 0.04
+  n_estimators: 400
+  num_leaves: 31
+  max_depth: 6
+  subsample: 0.85
+  colsample_bytree: 0.8
+  min_child_samples: 20
+  scale_pos_weight: "auto"  # "auto" computes imbalance ratio; or numeric value
+  early_stopping_rounds: 35
+  n_splits: 5  # Stratified K-Fold
+  random_state: 42
+
+model_fusion_nn:
+  tabular_hidden_dim: 64
+  text_hidden_dim: 128
+  vision_hidden_dim: 128
+  fusion_hidden_dims:
+    - 128
+    - 64
+  dropout: 0.3
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  batch_size: 64
+  epochs: 25
+  early_stopping_patience: 5
+  loss_weights:
+    bce: 1.0     # Binary outlier classification loss
+    mse: 0.4     # Continuous auxiliary log1p(R) regression loss
+
+tracking:
+  experiment_name: "creator-video-outlier-predictor"
+  tracking_uri: "sqlite:///mlflow.db"
+  artifact_path: "artifacts"
+  log_models: true

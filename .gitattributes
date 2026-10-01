@@ -1,0 +1,10 @@
+# Default all files to auto LF
+* text=auto eol=lf
+
+# Explicitly enforce LF for Docker and shell scripts
+Dockerfile text eol=lf
+*.sh text eol=lf
+*.py text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.json text eol=lf

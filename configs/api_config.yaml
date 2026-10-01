@@ -1,0 +1,23 @@
+# =====================================================================
+# Creator Video Outlier & Performance Predictor - API Configuration
+# =====================================================================
+
+app:
+  title: "Creator Video Outlier & Performance Predictor API"
+  description: "Production FastAPI inference service for creator video hit prediction and SHAP explainability."
+  version: "0.1.0"
+  host: "0.0.0.0"
+  port: 8000
+  debug: false
+  cors_origins:
+    - "*"
+
+model:
+  type: "lightgbm"  # "lightgbm" or "fusion_nn"
+  model_artifact_path: "artifacts/models/lgbm_model.pkl"
+  preprocessor_artifact_path: "artifacts/preprocessor/preprocessor.joblib"
+  text_embedder_cache: true
+  vision_embedder_cache: true
+  enable_shap: true
+  shap_background_samples: 100
+  prediction_threshold: 0.5  # Probability threshold for binary outlier flag
