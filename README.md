@@ -1,5 +1,12 @@
 # Creator Video Outlier & Performance Predictor 🚀
 
+![Python](https://img.shields.io/badge/Python-3.11-blue?logo=python)
+![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?logo=pytorch&logoColor=white)
+![LightGBM](https://img.shields.io/badge/LightGBM-brightgreen)
+![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)
+![Tests](https://img.shields.io/badge/Tests-19%20Passed-success)
+
 An end-to-end, production-grade Machine Learning system designed to predict whether a YouTube video will become an "outlier hit" (significantly outperforming its channel's historical median views) *before* or *at* upload time. 
 
 Built as a premier showcase project targeting a Machine Learning Engineer role at creator-economy platforms (e.g., Spotter).
